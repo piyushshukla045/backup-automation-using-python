@@ -1,0 +1,21 @@
+"""
+This is script to take backup from local to AWS s3 
+boto3-> used to do AWS TASKS USING python
+
+"""
+import boto3
+
+s3 = boto3.resource("s3")
+def upload_backup(s3,file_name,bucket_name,Key_name):
+         
+        data = open(file_name, 'rb') # file gets read in binary
+        s3.Bucket(bucket_name).put_object(Key = Key_name, Body = data)
+        print("Backup Uploaded successfully")
+
+bucket_name ="bucket19081999"
+region="us-east-2"
+Key_name = "My-backup.tar.gz"
+#create_bucket(s3)
+#show_buckets(s3)
+file_name =r"A:\Python_DevOps\Python_workshop\backup\backup_2024-09-08.tar.gz"
+upload_backup(s3,file_name,bucket_name,Key_name) #functon calling
