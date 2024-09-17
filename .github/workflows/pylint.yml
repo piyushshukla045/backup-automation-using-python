@@ -1,6 +1,9 @@
 name: Pylint
 
-on: [push]
+on:
+  push:
+    branches:
+      - main
 
 jobs:
   build:
@@ -8,16 +11,30 @@ jobs:
     strategy:
       matrix:
         python-version: ["3.8", "3.9", "3.10"]
+
     steps:
-    - uses: actions/checkout@v4
+    - name: Checkout code
+      uses: actions/checkout@v4
+
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v3
       with:
         python-version: ${{ matrix.python-version }}
+        node-version: '20'  # Ensure Node.js 20 is used for setup-python
+
+    - name: Set up Node.js (fix deprecation warning)
+      uses: actions/setup-node@v3
+      with:
+        node-version: '20'  # Explicitly set Node.js 20 to avoid future issues
+
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         pip install pylint
-    - name: Analysing the code with pylint
+
+    - name: Analyse the code with pylint
       run: |
         pylint $(git ls-files '*.py')
+
+    - name: Check Python version
+      run: python --version
